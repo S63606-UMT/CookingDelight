@@ -22,6 +22,12 @@
                     <h2>Profile Picture</h2>
                     <img src="../img/default_pfp.png" alt="Profile Picture" class="profile-pic">
                     <a href="editPFP.jsp"><button class="edit-image-btn">Edit Image</button></a>
+                    <div class="profile-options">
+                        <h2>User Options</h2>
+                        <a href="editPFP.jsp"><button class="user-btn">Logout</button></a>
+                        <a href="editPFP.jsp"><button class="user-btn">Get Verified</button></a>
+                        <a href="editPFP.jsp"><button class="delete-user-btn">Delete Account</button></a>
+                    </div>
                 </div>
                 <div class="profile-info">
                     <h2>Profile Info</h2>
