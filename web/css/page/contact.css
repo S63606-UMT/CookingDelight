@@ -1,0 +1,52 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 11 Jun 2024, 9:10:11 am
+    Author     : Saiful
+*/
+/*
+    Main CSS: style.css
+    Target  : contact.jsp
+*/
+main {
+    padding: 2rem;
+    background-color: #fff;
+}
+.contact-form, .contact-info, .faq {
+    margin-bottom: 2rem;
+}
+.contact-form h2, .contact-info h2, .faq h2 {
+    color: #ff5722;
+    border-bottom: 2px solid #ff5722;
+    padding-bottom: 0.5rem;
+}
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+}
+.contact-form label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+.contact-form input, .contact-form textarea {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+}
+.contact-form button {
+    background-color: #ff5722;
+    color: white;
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+}
+.contact-info, .faq {
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border: 1px solid #ddd;
+}
+.contact-info p, .faq p {
+    margin: 0.5rem 0;
+}

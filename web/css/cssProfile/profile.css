@@ -1,0 +1,81 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 11 Jun 2024, 3:27:53 pm
+    Author     : Saiful
+*/
+/*
+    Main CSS: style.css
+    Target  : profileView/profile.jsp
+*/
+.profile-container {
+    display: flex;
+    justify-content: left;
+    width: 90%;
+    margin: 40px auto; /* add some margin and center the form */
+    padding: 20px; /* add some padding around the form */
+    background-color: #f9f9f9; /* add a light gray background */
+    border: 1px solid #ddd; /* add a light gray border */
+    border-radius: 10px; /* add a subtle rounded corner */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* add a subtle shadow */
+}
+.profile-picture {
+    width: 25%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-picture h2 {
+    margin-top: 0;
+    text-align: center;
+}
+.profile-pic {
+    max-width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+.profile-info {
+    width: 75%;
+    padding-left: 20px;
+}
+.edit-image-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.edit-image-btn:hover {
+    background-color: #3e8e41;
+}
+.profile-info h2 {
+    margin-top: 0;
+}
+.profile-info input, .profile-info select, .profile-info textarea {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 0px;
+    border: 1px solid #ccc;
+}
+.profile-info textarea {
+    height: 100px;
+    resize: vertical;
+}
+.edit-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.edit-btn:hover {
+    background-color: #3e8e41;
+}

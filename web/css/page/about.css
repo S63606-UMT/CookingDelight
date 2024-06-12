@@ -1,0 +1,35 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 11 Jun 2024, 8:55:20 am
+    Author     : Saiful
+*/
+/*
+    Main CSS: style.css
+    Target  : about.jsp
+*/
+main {
+    padding: 2rem;
+    background-color: #fff;
+}
+.section {
+    margin-bottom: 2rem;
+}
+.section h2 {
+    color: #ff5722;
+    border-bottom: 2px solid #ff5722;
+    padding-bottom: 0.5rem;
+}
+.section img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+}
+.contact, .newsletter {
+    background-color: #f8f8f8;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    margin-top: 1rem;
+}

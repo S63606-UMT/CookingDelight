@@ -1,0 +1,46 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 11 Jun 2024, 8:18:31 am
+    Author     : Saiful
+*/
+/*
+    Main CSS: style.css
+    Target  : index.jsp
+*/
+.hero {
+    background: url('hero-image.jpg') no-repeat center center;
+    background-size: cover;
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+.hero h1 {
+    margin: 0;
+    font-size: 3rem;
+}
+.hero p {
+    font-size: 1.5rem;
+}
+.hero a {
+    background-color: #ff5722;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+.content {
+    padding: 2rem;
+}
+.recipes, .categories {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+.recipe, .category {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    width: 30%;
+}

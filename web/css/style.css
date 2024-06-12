@@ -1,0 +1,55 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 11 Jun 2024, 8:55:58 am
+    Author     : Saiful
+*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+header {
+    background-color: #ff5722;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+}
+nav {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: left; /* add this */
+    display: flex;
+    justify-content: space-between; /* add this to separate the two groups of links */
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.nav-item {
+    margin-right: 20px;
+}
+.nav-right {
+    margin-left: auto; /* push the second group of links to the right */
+}
+.nav-link {
+    margin-right: 20px; /* add some space between links */
+}
+nav a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+}
+footer {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
