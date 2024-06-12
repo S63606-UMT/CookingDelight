@@ -54,6 +54,25 @@ public class UserDao {
             e.printStackTrace();
         }
     }
+    
+    public boolean isUser(String username, String password) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select from users where username=?");
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                if (password.equals(rs.getString("password"))) {
+                    return true;
+                    
+                }
+            }     
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     /*
     public void updateUser(User user) {
         try {

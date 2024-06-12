@@ -23,10 +23,8 @@ import com.model.User;
  */
 public class UserController extends HttpServlet {
     
-    private static String INSERT = "/user.jsp";
-    private static String EDIT = "/editUser.jsp";
-    private static String LIST_USER = "/listUser.jsp";
-    private static String INDEX = "/index.jsp";
+    private static final String INDEX = "/index.jsp";
+    private static final String PROFILE = "profileView/profile.jsp";
     private UserDao dao;
     
     public UserController() throws ClassNotFoundException {
@@ -109,20 +107,32 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String redirectURL = "";
+        String action = request.getParameter("action");
         
-        //String action = request.getParameter("action");
-        
-        User user = new User();
-        LocalDate dob = LocalDate.parse(request.getParameter("dob"));
-        
-        user.setUsername(request.getParameter("username"));
-        user.setPassword(request.getParameter("password"));;
-        user.setEmail(request.getParameter("email"));
-        user.setDateOfBirth(dob);
-        user.setGender(request.getParameter("gender"));
-        
-        dao.addUser(user);
-        
+        if (action.equalsIgnoreCase("register")) {
+            User user = new User();
+            LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+
+            user.setUsername(request.getParameter("username"));
+            user.setPassword(request.getParameter("password"));;
+            user.setEmail(request.getParameter("email"));
+            user.setDateOfBirth(dob);
+            user.setGender(request.getParameter("gender"));
+            dao.addUser(user);
+            
+            HttpSession session = request.getSession(); //Create a session if there isn't one.
+            session.setAttribute("username", request.getParameter("username"));
+            redirectURL = INDEX;
+        }
+
+        if (action.equalsIgnoreCase("login")) {
+            dao.isUser(request.getParameter("username"), request.getParameter("password")); //
+            
+            HttpSession session = request.getSession(); //Create a session if there isn't one.
+            session.setAttribute("username", request.getParameter("username"));
+            redirectURL = PROFILE;
+        }
         /*
         if (action.equalsIgnoreCase(("edit"))) {
             //dao.updateUser(user);
@@ -130,13 +140,8 @@ public class UserController extends HttpServlet {
         else {
             dao.addUser(user);
         }
-        */
-        
-        HttpSession session = request.getSession(); //Create a session if there isn't one.
-        session.setAttribute("username", request.getParameter("username"));
-        
-        RequestDispatcher view = request.getRequestDispatcher(INDEX);
-        view.forward(request, response);
+        */ 
+        response.sendRedirect(response.encodeRedirectURL(redirectURL));
         
     }
 
