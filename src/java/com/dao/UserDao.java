@@ -12,8 +12,10 @@ package com.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 import com.model.User;
 import com.util.DBConnection;
+import java.time.LocalDate;
 
 public class UserDao {
     
@@ -21,7 +23,6 @@ public class UserDao {
     
     public UserDao() throws ClassNotFoundException {
         connection = DBConnection.getConnection();
-        System.out.println("Fuck");
     }
     
     public void addUser(User user) {
@@ -42,15 +43,91 @@ public class UserDao {
         }
     }
     
-    public void deleteUser(String userId) {
+    public void deleteUser(String username) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from users where userid=?");
+                    .prepareStatement("delete from users where username=?");
             
-            preparedStatement.setString(1, userId);
+            preparedStatement.setString(1, username);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public boolean isUser(String username, String password) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select from users where username=?");
+            
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                if (password.equals(rs.getString("password"))) {
+                    return true;
+                    
+                }
+            }     
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public void updateUsername(User user, String newUsername) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set username=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newUsername);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateEmail(User user, String newEmail) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set email=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newEmail);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateDob(User user, String newDob) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set dateOfBirth=? "
+                            + "where userid=?");
+
+            preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.parse(newDob)));
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateGender(User user, String newGender) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set gender=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newGender);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -90,18 +167,20 @@ public class UserDao {
         
         return users;
     }
-    
-    public User getUserById(String userId) {
+    */
+    public User getUserByUsername(String username) {
         User user = new User();
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select * from users where userid=?");
-            preparedStatement.setString(1, userId);
+                    .prepareStatement("select * from users where username=?");
+            preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                user.setUserid(rs.getString("userid"));
-                user.setFirstName(rs.getString("firstname"));
-                user.setLastName(rs.getString("lastname"));
+                user.setUserid(Integer.parseInt(rs.getString("userid")));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
+                user.setGender(rs.getString("gender"));
             }
         }
         catch (SQLException e) {
@@ -110,5 +189,5 @@ public class UserDao {
         
         return user;
     }
-    */
+    
 }

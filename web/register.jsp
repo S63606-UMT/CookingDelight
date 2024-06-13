@@ -18,7 +18,7 @@
         <jsp:include page="base/header.jsp" />
         <div class="container">
             <h1 class="display-3">Register</h1>
-            <form action="UserController" method="post">
+            <form action="UserController?action=register" method="post">
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" class="form-control" required>

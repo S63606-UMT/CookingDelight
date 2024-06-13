@@ -37,7 +37,7 @@
             </ul>
             <ul class="nav-links nav-right">           
                 <%
-                    if (session.getAttribute("username") != null) {
+                    if (session.getAttribute("authenticatedUser") != null) {
                 %>
                 <li class="nav-item">
                     <a class="nav-link" href="<%=up%>profileView/profile.jsp">Profile</a>

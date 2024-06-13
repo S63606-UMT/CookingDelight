@@ -23,10 +23,8 @@ import com.model.User;
  */
 public class UserController extends HttpServlet {
     
-    private static String INSERT = "/user.jsp";
-    private static String EDIT = "/editUser.jsp";
-    private static String LIST_USER = "/listUser.jsp";
-    private static String INDEX = "/index.jsp";
+    private static final String INDEX = "index.jsp";
+    private static final String PROFILE = "profileView/profile.jsp";
     private UserDao dao;
     
     public UserController() throws ClassNotFoundException {
@@ -71,15 +69,25 @@ public class UserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String forward = "";
+        String redirectURL = "";
         String action = request.getParameter("action");
-        /*
-        if (action.equalsIgnoreCase("delete")) {
-            String userId = request.getParameter("userId");
-            dao.deleteUser(userId);
-            forward = LIST_USER;
-            request.setAttribute("users", dao.getAllUsers());
+
+        if (action.equalsIgnoreCase("delete")) {  
+            HttpSession session = request.getSession(); //Retrieve current session.
+            String username = session.getAttribute("username").toString();
+            System.out.println(username);
+            dao.deleteUser(username);
+            
+            session.invalidate(); //Delete session.
+            redirectURL = INDEX;
         }
+        
+        if (action.equalsIgnoreCase("logout")) {
+            HttpSession session = request.getSession(); //Retrieve current session.
+            session.invalidate(); //Delete session.
+            redirectURL = INDEX;
+        }
+        /*
         else if (action.equalsIgnoreCase("edit")) {
             forward = EDIT;
             String userId = request.getParameter("userId");
@@ -94,8 +102,7 @@ public class UserController extends HttpServlet {
             forward = INSERT;
         }
         */
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
+        response.sendRedirect(response.encodeRedirectURL(redirectURL));
     }
 
     /**
@@ -109,20 +116,87 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String redirectURL = "";
+        String action = request.getParameter("action");
         
-        //String action = request.getParameter("action");
+        // register
+        if (action.equalsIgnoreCase("register")) {
+            User user = new User();
+            LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+
+            user.setUsername(request.getParameter("username"));
+            user.setPassword(request.getParameter("password"));;
+            user.setEmail(request.getParameter("email"));
+            user.setDateOfBirth(dob);
+            user.setGender(request.getParameter("gender"));
+            dao.addUser(user);
+            
+            redirectURL = INDEX;
+        }
+        // login
+        if (action.equalsIgnoreCase("login")) {
+            dao.isUser(request.getParameter("username"), request.getParameter("password")); // Authenticate user.
+            
+            User user = dao.getUserByUsername(request.getParameter("username")); // Retrieve relevant info of user.
+
+            HttpSession session = request.getSession(); //Create a session if there isn't one.
+            session.setAttribute("authenticatedUser", user); // Bring the whole user to the next page.
+            redirectURL = PROFILE;
+        }
+        // edit username
+        if (action.equalsIgnoreCase("editUsername")) {
+            HttpSession session = request.getSession(); // Retrieve current session.
+            String username = request.getParameter("username");
+            // Update the username in the database
+            dao.updateUsername((User) session.getAttribute("authenticatedUser"), username);
+            
+            // Update session
+            User user = dao.getUserByUsername(request.getParameter("username"));
+            session.setAttribute("authenticatedUser", user);
+            redirectURL = PROFILE;
+        }
         
-        User user = new User();
-        LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+        // edit email
+        if (action.equalsIgnoreCase("editEmail")) {
+            HttpSession session = request.getSession(); // Retrieve current session.
+            User user = (User) session.getAttribute("authenticatedUser");
+            String email = request.getParameter("email");
+            // Update the username in the database
+            dao.updateEmail(user, email);
+            
+            // Update session
+            User updatedUser = dao.getUserByUsername(user.getUsername());
+            session.setAttribute("authenticatedUser", updatedUser);
+            redirectURL = PROFILE;
+        }
         
-        user.setUsername(request.getParameter("username"));
-        user.setPassword(request.getParameter("password"));;
-        user.setEmail(request.getParameter("email"));
-        user.setDateOfBirth(dob);
-        user.setGender(request.getParameter("gender"));
+        // edit dob
+        if (action.equalsIgnoreCase("editDob")) {
+            HttpSession session = request.getSession(); // Retrieve current session.
+            User user = (User) session.getAttribute("authenticatedUser");
+            String dob = request.getParameter("dob");
+            // Update the dateOfBirth in the database
+            dao.updateDob(user, dob);
+
+            // Update session
+            User updatedUser = dao.getUserByUsername(user.getUsername());
+            session.setAttribute("authenticatedUser", updatedUser);
+            redirectURL = PROFILE;
+        }
         
-        dao.addUser(user);
-        
+        // edit gender
+        if (action.equalsIgnoreCase("editGender")) {
+            HttpSession session = request.getSession(); // Retrieve current session.
+            User user = (User) session.getAttribute("authenticatedUser");
+            String gender = request.getParameter("gender");
+            // Update the gender in the database
+            dao.updateGender(user, gender);
+
+            // Update session
+            User updatedUser = dao.getUserByUsername(user.getUsername());
+            session.setAttribute("authenticatedUser", updatedUser);
+            redirectURL = PROFILE;
+        }
         /*
         if (action.equalsIgnoreCase(("edit"))) {
             //dao.updateUser(user);
@@ -130,13 +204,8 @@ public class UserController extends HttpServlet {
         else {
             dao.addUser(user);
         }
-        */
-        
-        HttpSession session = request.getSession(); //Create a session if there isn't one.
-        session.setAttribute("username", request.getParameter("username"));
-        
-        RequestDispatcher view = request.getRequestDispatcher(INDEX);
-        view.forward(request, response);
+        */ 
+        response.sendRedirect(response.encodeRedirectURL(redirectURL));
         
     }
 
