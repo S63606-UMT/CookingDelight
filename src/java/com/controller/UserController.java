@@ -23,7 +23,7 @@ import com.model.User;
  */
 public class UserController extends HttpServlet {
     
-    private static final String INDEX = "/index.jsp";
+    private static final String INDEX = "index.jsp";
     private static final String PROFILE = "profileView/profile.jsp";
     private UserDao dao;
     
@@ -69,15 +69,24 @@ public class UserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String forward = "";
+        String redirectURL = "";
         String action = request.getParameter("action");
-        /*
+
         if (action.equalsIgnoreCase("delete")) {
-            String userId = request.getParameter("userId");
-            dao.deleteUser(userId);
-            forward = LIST_USER;
-            request.setAttribute("users", dao.getAllUsers());
+            String username = request.getParameter("username");
+            dao.deleteUser(username);
+            
+            HttpSession session = request.getSession(); //Retrieve current session.
+            session.setAttribute("username", request.getParameter("username"));
+            redirectURL = INDEX;
         }
+        
+        if (action.equalsIgnoreCase("logout")) {
+            HttpSession session = request.getSession(); //Retrieve current session.
+            session.invalidate(); //Delete session.
+            redirectURL = INDEX;
+        }
+        /*
         else if (action.equalsIgnoreCase("edit")) {
             forward = EDIT;
             String userId = request.getParameter("userId");
@@ -92,8 +101,7 @@ public class UserController extends HttpServlet {
             forward = INSERT;
         }
         */
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
+        response.sendRedirect(response.encodeRedirectURL(redirectURL));
     }
 
     /**
@@ -121,8 +129,6 @@ public class UserController extends HttpServlet {
             user.setGender(request.getParameter("gender"));
             dao.addUser(user);
             
-            HttpSession session = request.getSession(); //Create a session if there isn't one.
-            session.setAttribute("username", request.getParameter("username"));
             redirectURL = INDEX;
         }
 

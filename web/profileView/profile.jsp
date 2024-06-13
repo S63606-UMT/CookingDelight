@@ -24,7 +24,7 @@
                     <a href="editPFP.jsp"><button class="edit-image-btn">Edit Image</button></a>
                     <div class="profile-options">
                         <h2>User Options</h2>
-                        <a href="editPFP.jsp"><button class="user-btn">Logout</button></a>
+                        <a href="../UserController?action=logout"><button class="user-btn">Logout</button></a>
                         <a href="editPFP.jsp"><button class="user-btn">Get Verified</button></a>
                         <a href="editPFP.jsp"><button class="delete-user-btn">Delete Account</button></a>
                     </div>

@@ -42,12 +42,12 @@ public class UserDao {
         }
     }
     
-    public void deleteUser(String userId) {
+    public void deleteUser(String username) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from users where userid=?");
+                    .prepareStatement("delete from users where username=?");
             
-            preparedStatement.setString(1, userId);
+            preparedStatement.setString(1, username);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -109,18 +109,18 @@ public class UserDao {
         
         return users;
     }
-    
-    public User getUserById(String userId) {
+    */
+    public User getUserByUsername(String username) {
         User user = new User();
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select * from users where userid=?");
-            preparedStatement.setString(1, userId);
+                    .prepareStatement("select * from users where username=?");
+            preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                user.setUserid(rs.getString("userid"));
-                user.setFirstName(rs.getString("firstname"));
-                user.setLastName(rs.getString("lastname"));
+                user.setUserid(Integer.parseInt(rs.getString("userid")));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
             }
         }
         catch (SQLException e) {
@@ -129,5 +129,5 @@ public class UserDao {
         
         return user;
     }
-    */
+    
 }
