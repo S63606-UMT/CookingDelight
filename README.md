@@ -20,9 +20,9 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
 	- Three category of food
 	- paging is inevitable
 	- prime place to use JSTL?
-3. Create recipeDAO.java in com.Dao to access database.
-	- pain peko
 	- The recipe should allow markdown format for better readability for client.
+3. Create recipeDAO.java in com.dao to access database.
+	- Use com.util.DBConnection to open connection.
 4. Create recipe.java in com.Model for reusability.
-	- Simple.
+	- Simple is best.
 5. Create RecipeController.java to be the intermediary between the View and the business process.
