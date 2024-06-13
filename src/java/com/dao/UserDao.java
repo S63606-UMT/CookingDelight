@@ -12,6 +12,7 @@ package com.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 import com.model.User;
 import com.util.DBConnection;
 import java.time.LocalDate;
@@ -59,6 +60,7 @@ public class UserDao {
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("select from users where username=?");
+            
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
@@ -72,6 +74,62 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public void updateUsername(User user, String newUsername) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set username=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newUsername);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateEmail(User user, String newEmail) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set email=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newEmail);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateDob(User user, String newDob) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set dateOfBirth=? "
+                            + "where userid=?");
+
+            preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.parse(newDob)));
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateGender(User user, String newGender) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set gender=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newGender);
+            preparedStatement.setInt(2, user.getUserid());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     /*
     public void updateUser(User user) {
