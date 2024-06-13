@@ -72,12 +72,13 @@ public class UserController extends HttpServlet {
         String redirectURL = "";
         String action = request.getParameter("action");
 
-        if (action.equalsIgnoreCase("delete")) {
-            String username = request.getParameter("username");
+        if (action.equalsIgnoreCase("delete")) {  
+            HttpSession session = request.getSession(); //Retrieve current session.
+            String username = session.getAttribute("username").toString();
+            System.out.println(username);
             dao.deleteUser(username);
             
-            HttpSession session = request.getSession(); //Retrieve current session.
-            session.setAttribute("username", request.getParameter("username"));
+            session.invalidate(); //Delete session.
             redirectURL = INDEX;
         }
         

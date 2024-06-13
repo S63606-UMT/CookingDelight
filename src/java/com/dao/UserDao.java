@@ -21,7 +21,6 @@ public class UserDao {
     
     public UserDao() throws ClassNotFoundException {
         connection = DBConnection.getConnection();
-        System.out.println("Fuck");
     }
     
     public void addUser(User user) {
