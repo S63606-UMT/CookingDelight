@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="com.model.User, java.time.LocalDate" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -16,6 +17,9 @@
     </head>
     <body>
         <jsp:include page="../base/header.jsp" />
+        <%
+            User user = (User) session.getAttribute("authenticatedUser");
+        %>
         <div class="container">
             <div class="profile-container">
                 <div class="profile-picture">
@@ -31,22 +35,23 @@
                 </div>
                 <div class="profile-info">
                     <h2>Profile Info</h2>
-                    <p>Username: <input type="text" value="${username}" /></p>
+                    <p>Username: <input type="text" value="<%= user.getUsername() %>" /></p>
                     <a href="../index.jsp"><button class="edit-btn">Edit Username</button></a>
                     <p>Password: <b>********</b></p>
                     <a href="../index.jsp"><button class="edit-btn">Change Password</button></a>
-                    <p>Email: <input type="email" value="${email}" /></p>
+                    <p>Email: <input type="email" value="<%= user.getEmail() %>" /></p>
                     <a href="#"><button class="edit-btn">Edit Email</button></a>
+                    <p>Date of Birth: <input type="date" value="<%= user.getDateOfBirth() %>" /></p>
+                    <a href="../index.jsp"><button class="edit-btn">Edit Date of Birth</button></a>
                     <p>Gender: <select>
-                        <option value="${gender}">${gender}</option>
+                        <option value="<%= user.getGender() %>"><%= user.getGender() %></option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
                     </select></p>
                     <a href="../index.jsp"><button class="edit-btn">Edit Gender</button></a>
-                    <p>Date of Birth: <input type="date" value="${dob}" /></p>
-                    <a href="../index.jsp"><button class="edit-btn">Edit Date of Birth</button></a>
-                    <p>Description: <textarea>${description}</textarea></p>
+                    <%-- TODO: Add markdown support and utility --%>
+                    <p>Description: <textarea>${description}</textarea></p> 
                     <a href="../index.jsp"><button class="edit-btn">Save Description</button></a>
                 </div>
             </div>

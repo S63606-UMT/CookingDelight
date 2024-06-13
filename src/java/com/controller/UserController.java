@@ -134,10 +134,12 @@ public class UserController extends HttpServlet {
         }
 
         if (action.equalsIgnoreCase("login")) {
-            dao.isUser(request.getParameter("username"), request.getParameter("password")); //
+            dao.isUser(request.getParameter("username"), request.getParameter("password")); // Authenticate user.
             
+            User user = dao.getUserByUsername(request.getParameter("username")); // Retrieve relevant info of user.
+
             HttpSession session = request.getSession(); //Create a session if there isn't one.
-            session.setAttribute("username", request.getParameter("username"));
+            session.setAttribute("authenticatedUser", user); // Bring the whole user to the next page.
             redirectURL = PROFILE;
         }
         /*

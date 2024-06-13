@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.model.User;
 import com.util.DBConnection;
+import java.time.LocalDate;
 
 public class UserDao {
     
@@ -120,6 +121,8 @@ public class UserDao {
                 user.setUserid(Integer.parseInt(rs.getString("userid")));
                 user.setUsername(rs.getString("username"));
                 user.setEmail(rs.getString("email"));
+                user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
+                user.setGender(rs.getString("gender"));
             }
         }
         catch (SQLException e) {
