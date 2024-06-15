@@ -19,7 +19,7 @@
         <div class="container">
             <!-- Login form content here -->
             <h1 class="display-3">Login</h1>
-            <form action="UserController?action=login" method="POST">
+            <form action="profile?action=login" method="POST">
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" class="form-control">

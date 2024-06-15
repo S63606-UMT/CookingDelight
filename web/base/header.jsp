@@ -23,16 +23,16 @@
             %>   
             <ul class="nav-links">
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>index.jsp">Home</a>
+                    <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>recipe.jsp">Recipes</a>
+                    <a class="nav-link" href="recipe.jsp">Recipes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>about.jsp">About</a>
+                    <a class="nav-link" href="about.jsp">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>contact.jsp">Contact</a>
+                    <a class="nav-link" href="contact.jsp">Contact</a>
                 </li>
             </ul>
             <ul class="nav-links nav-right">           
@@ -40,14 +40,14 @@
                     if (session.getAttribute("authenticatedUser") != null) {
                 %>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>profileView/profile.jsp">Profile</a>
+                    <a class="nav-link" href="profile?action=view">Profile</a>
                 </li>
                 <%} else { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>register.jsp">Register</a>
+                    <a class="nav-link" href="register.jsp">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<%=up%>login.jsp">Login</a>
+                    <a class="nav-link" href="login.jsp">Login</a>
                 </li>
                 <% } %>
             </ul>

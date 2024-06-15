@@ -11,8 +11,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="../css/style.css">
-        <link rel="stylesheet" type="text/css" href="../css/cssProfile/profile.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/cssProfile/profile.css">
         <script src="../js/jsProfile/profile.js"></script>
         <title>Profile - Cooking Delight</title>
     </head>
@@ -21,17 +21,18 @@
         <%
             User user = (User) session.getAttribute("authenticatedUser");
         %>
+        <%=request.getServletPath()%>
         <div class="container">
             <div class="profile-container">
                 <div class="profile-picture">
                     <h2>Profile Picture</h2>
-                    <img src="../img/default_pfp.png" alt="Profile Picture" class="profile-pic">
+                    <img src="img/default_pfp.png" alt="Profile Picture" class="profile-pic">
                     <a href="editPFP.jsp"><button class="edit-image-btn">Edit Image</button></a>
                     <div class="profile-options">
                         <h2>User Options</h2>
-                        <a href="../UserController?action=logout"><button class="user-btn">Logout</button></a>
+                        <a href="profile?action=logout"><button class="user-btn">Logout</button></a>
                         <a href="editPFP.jsp"><button class="user-btn">Get Verified</button></a>
-                        <a href="../UserController?action=delete"><button class="delete-user-btn">Delete Account</button></a>
+                        <a href="profile?action=delete"><button class="delete-user-btn">Delete Account</button></a>
                     </div>
                 </div>
                 <div class="profile-info">
