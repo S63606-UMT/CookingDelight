@@ -18,6 +18,27 @@ public class User {
     private LocalDate dateOfBirth;
     private String gender;
 
+    public User() {
+    }
+    
+    
+    public User(String username, String password, String email, LocalDate dateOfBirth, String gender) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+
+    public User(int userid, String username, String password, String email, LocalDate dateOfBirth, String gender) {
+        this.userid = userid;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+    
     public int getUserid() {
         return userid;
     }

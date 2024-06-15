@@ -43,12 +43,12 @@ public class UserDao {
         }
     }
     
-    public void deleteUser(String username) {
+    public void deleteUserById(int userId) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from users where username=?");
+                    .prepareStatement("delete from users where userid=?");
             
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -56,16 +56,20 @@ public class UserDao {
         }
     }
     
-    public boolean isUser(String username, String password) {
+    public User isUser(String username, String password) {
+        User authenticatedUser = null;
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select from users where username=?");
+                    .prepareStatement("select * from users where username=?");
             
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 if (password.equals(rs.getString("password"))) {
-                    return true;
+                    LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
+                    
+                    authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"),
+                    rs.getString("email"), dateOfBirth, rs.getString("gender"));
                     
                 }
             }     
@@ -73,7 +77,7 @@ public class UserDao {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return authenticatedUser;
     }
     
     public void updateUsername(User user, String newUsername) {
@@ -176,8 +180,31 @@ public class UserDao {
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                user.setUserid(Integer.parseInt(rs.getString("userid")));
+                user.setUserid(rs.getInt("userid"));
                 user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
+                user.setGender(rs.getString("gender"));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return user;
+    }
+    
+    public User getUserById(int userId) {
+        User user = new User();
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select * from users where username=?");
+            preparedStatement.setInt(1, userId);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                user.setUserid(rs.getInt("userid"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
                 user.setEmail(rs.getString("email"));
                 user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
                 user.setGender(rs.getString("gender"));

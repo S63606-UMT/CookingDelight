@@ -21,7 +21,6 @@
         <%
             User user = (User) session.getAttribute("authenticatedUser");
         %>
-        <%=request.getServletPath()%>
         <div class="container">
             <div class="profile-container">
                 <div class="profile-picture">

@@ -186,26 +186,29 @@ public class UserController extends HttpServlet {
     
     private void login(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
-        dao.isUser(request.getParameter("username"), request.getParameter("password")); // Authenticate user.
-        User user = dao.getUserByUsername(request.getParameter("username")); // Retrieve relevant info of user.
+        User authenticatedUser = dao.isUser(request.getParameter("username"), request.getParameter("password")); // Authenticate and retrieve relevant info of user.
+        if (authenticatedUser != null) {
+            HttpSession session = request.getSession(); //Create a session if there isn't one.
+            session.setAttribute("authenticatedUser", authenticatedUser); // Bring the whole user to the next page.
+            System.out.println("Session created with user: " + authenticatedUser.getUsername());
+            doGet(request, response);
+        } else {
+            response.sendRedirect(response.encodeRedirectURL(LOGIN));
+        } 
         
-        HttpSession session = request.getSession(); //Create a session if there isn't one.
-        session.setAttribute("authenticatedUser", user); // Bring the whole user to the next page.
-        System.out.println("Session created with user: " + user.getUsername());
-        doGet(request, response);
     }
     
     private void editUsername(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); // Retrieve current session.
         String newUsername = request.getParameter("username");
-        
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
         // Update the username in the database
-        dao.updateUsername((User) session.getAttribute("authenticatedUser"), newUsername);
+        dao.updateUsername(loggedUser, newUsername);
 
         // Update session
-        User user = dao.getUserByUsername(request.getParameter("username"));
-        session.setAttribute("authenticatedUser", user);
+        User updatedUser = dao.getUserById(loggedUser.getUserid());
+        session.setAttribute("authenticatedUser", updatedUser);
         
         RequestDispatcher dispatcher = request.getRequestDispatcher(SELF);
         dispatcher.forward(request, response);
@@ -214,14 +217,14 @@ public class UserController extends HttpServlet {
     private void editEmail(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); // Retrieve current session.
-        User user = (User) session.getAttribute("authenticatedUser");
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
         String email = request.getParameter("email");
         
         // Update the email in the database
-        dao.updateEmail(user, email);
+        dao.updateEmail(loggedUser, email);
 
         // Update session
-        User updatedUser = dao.getUserByUsername(user.getUsername());
+        User updatedUser = dao.getUserById(loggedUser.getUserid());
         session.setAttribute("authenticatedUser", updatedUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher(SELF);
         dispatcher.forward(request, response);
@@ -230,14 +233,14 @@ public class UserController extends HttpServlet {
     private void editDob(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); // Retrieve current session.
-        User user = (User) session.getAttribute("authenticatedUser");
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
         String dob = request.getParameter("dob");
         
         // Update the dateOfBirth in the database
-        dao.updateDob(user, dob);
+        dao.updateDob(loggedUser, dob);
 
         // Update session
-        User updatedUser = dao.getUserByUsername(user.getUsername());
+        User updatedUser = dao.getUserById(loggedUser.getUserid());
         session.setAttribute("authenticatedUser", updatedUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher(SELF);
         dispatcher.forward(request, response);
@@ -246,14 +249,14 @@ public class UserController extends HttpServlet {
     private void editGender(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); // Retrieve current session.
-        User user = (User) session.getAttribute("authenticatedUser");
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
         String gender = request.getParameter("gender");
         
         // Update the gender in the database
-        dao.updateGender(user, gender);
+        dao.updateGender(loggedUser, gender);
 
         // Update session
-        User updatedUser = dao.getUserByUsername(user.getUsername());
+        User updatedUser = dao.getUserById(loggedUser.getUserid());
         session.setAttribute("authenticatedUser", updatedUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher(SELF);
         dispatcher.forward(request, response);
@@ -262,8 +265,8 @@ public class UserController extends HttpServlet {
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); //Retrieve current session.
-        User user = (User) session.getAttribute("authenticatedUser");
-        dao.deleteUser(user.getUsername());
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
+        dao.deleteUserById(loggedUser.getUserid());
 
         session.invalidate(); //Delete session.
         response.sendRedirect(response.encodeRedirectURL(INDEX));
@@ -272,7 +275,7 @@ public class UserController extends HttpServlet {
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); //Retrieve current session.
         session.invalidate(); //Delete session.
-        response.sendRedirect(response.encodeRedirectURL(INDEX));
+        response.sendRedirect(response.encodeRedirectURL(INDEX)); // Redirect to homepage.
     }
     /*
     private void template(HttpServletRequest request, HttpServletResponse response)
