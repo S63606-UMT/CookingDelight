@@ -75,7 +75,11 @@ public class UserDao {
                     
                     authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"), 
                             rs.getString("email"), dateOfBirth, rs.getString("gender"));
-                    
+                
+                    String description = rs.getString("description");
+                    if (description != null && description.length() != 0) {
+                        authenticatedUser.setDescription(description);
+                    }
                 }
             }     
         }
@@ -93,6 +97,23 @@ public class UserDao {
                             + "where userid=?");
 
             preparedStatement.setString(1, newUsername);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
+    }
+    
+    public boolean updatePassword(User user, String newPassword) {
+        boolean rowUpdated = false;
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set password=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, hashedPassword);
             preparedStatement.setInt(2, user.getUserid());
             rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
@@ -141,6 +162,22 @@ public class UserDao {
                             + "where userid=?");
 
             preparedStatement.setString(1, newGender);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
+    }
+    
+    public boolean updateDesc(User user, String newDesc) {
+        boolean rowUpdated = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set description=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newDesc);
             preparedStatement.setInt(2, user.getUserid());
             rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
@@ -198,7 +235,14 @@ public class UserDao {
                 user.setEmail(rs.getString("email"));
                 user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
                 user.setGender(rs.getString("gender"));
+                
+                String description = rs.getString("description");
+                if (description != null && description.length() != 0) {
+                    user.setDescription(description);
+                }
             }
+            
+            
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -223,6 +267,11 @@ public class UserDao {
                         rs.getString("email"), 
                         dateOfBirth, 
                         rs.getString("gender"));
+                
+                String description = rs.getString("description");
+                if (description != null && description.length() != 0) {
+                    user.setDescription(description);
+                }
             }
         }
         catch (SQLException e) {

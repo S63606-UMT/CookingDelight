@@ -16,7 +16,6 @@
     </head>
     <body>
         <jsp:include page="base/header.jsp" />
-        <%= request.getParameter("msg") %>
         <section class="hero">
             <h1>Welcome to Cooking Delight</h1>
             <p>Discover delicious recipes and cooking tips</p>

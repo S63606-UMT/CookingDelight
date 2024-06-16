@@ -32,6 +32,7 @@ public class UserController extends HttpServlet {
     private static final String REGISTER = "register.jsp";
     private static final String PROFILE = "profileView/profile.jsp";
     private static final String SUCCESS = "profileView/success.jsp";
+    private static final String EDIT_PASSWORD = "profileView/editPassword.jsp";
     private UserDao dao;
     
     public UserController() throws ClassNotFoundException {
@@ -144,6 +145,9 @@ public class UserController extends HttpServlet {
                 case "editUsername":
                     editUsername(request, response);
                     break;
+                case "editPassword":
+                    editPassword(request, response);
+                    break;
                 case "editEmail":
                     editEmail(request, response);
                     break;
@@ -152,6 +156,12 @@ public class UserController extends HttpServlet {
                     break;
                 case "editGender":
                     editGender(request, response);
+                    break;
+                case "editDesc":
+                    editDesc(request, response);
+                    break;
+                case "updatePassword":
+                    updatePassword(request, response);
                     break;
                 default:
                     User user = (User) session.getAttribute("authenticatedUser");
@@ -172,11 +182,58 @@ public class UserController extends HttpServlet {
     
     private void register(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
+        
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirm-password");
+        
+        // Check if passwords are the same
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("msg", "Error: Passwords do not match");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // Check if password meets the conditions
+        if (password.length() < 8) {
+            request.setAttribute("msg", "Error: Password should be at least 8 characters");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        boolean hasSpecialChar = false;
+        boolean hasUppercase = false;
+        boolean hasLowercase = false;
+        for (char c : password.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                hasSpecialChar = true;
+            }
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            }
+            if (Character.isLowerCase(c)) {
+                hasLowercase = true;
+            }
+        }
+        if (!hasSpecialChar) {
+            request.setAttribute("msg", "Error: Password should have at least one special character");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        } else if (!(hasUppercase || hasLowercase)) {
+            request.setAttribute("msg", "Error: Password should have at least one uppercase or lowercase letter");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        // If password is valid, proceed with registration
         User user = new User();
         LocalDate dob = LocalDate.parse(request.getParameter("dob"));
 
         user.setUsername(request.getParameter("username"));
-        user.setPassword(request.getParameter("password"));
+        user.setPassword(password);
         user.setEmail(request.getParameter("email"));
         user.setDateOfBirth(dob);
         user.setGender(request.getParameter("gender"));
@@ -188,7 +245,7 @@ public class UserController extends HttpServlet {
             dispatcher.forward(request, response);
         }   
         else {
-            // Set success message
+            // Set fail message
             request.setAttribute("msg", "Failed registering user.");
             
             RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
@@ -198,11 +255,20 @@ public class UserController extends HttpServlet {
     
     private void login(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
-        User authenticatedUser = dao.isUser(request.getParameter("username"), request.getParameter("password")); // Authenticate and retrieve relevant info of user.
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        User authenticatedUser = dao.isUser(username, password); // Authenticate and retrieve relevant info of user.
         if (authenticatedUser != null) {
             HttpSession session = request.getSession(); //Create a session if there isn't one.
             session.setAttribute("authenticatedUser", authenticatedUser); // Bring the whole user to the next page.
-            System.out.println("Session created with user: " + authenticatedUser.getUsername());
+            
+            //
+            int passwordLength = password.length();
+            String maskedPassword = "*".repeat(passwordLength - 2)
+                    + password.substring(passwordLength - 2, passwordLength);
+            
+            // Send masked password to be displayed in profile view
+            session.setAttribute("maskedPassword", maskedPassword);
             RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
             dispatcher.forward(request, response);
         } else {
@@ -216,8 +282,8 @@ public class UserController extends HttpServlet {
     
     private void editUsername(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
-        HttpSession session = request.getSession(); // Retrieve current session.
         String newUsername = request.getParameter("username");
+        HttpSession session = request.getSession(); // Retrieve current session.
         User loggedUser = (User) session.getAttribute("authenticatedUser");
         
         // Update the username in the database
@@ -234,6 +300,36 @@ public class UserController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
             dispatcher.forward(request, response);
         }
+    }
+    
+    private void editPassword(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(EDIT_PASSWORD);
+        dispatcher.forward(request, response);
+    }
+    private void updatePassword(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(); // Retrieve current session.
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
+        
+        String oldPassword = request.getParameter("old-password");
+        String newPassword = request.getParameter("new-password");
+        String confirmPassword = request.getParameter("confirm-password");
+        
+        if (dao.updatePassword(loggedUser, newPassword)) {
+            // Update session
+            User updatedUser = dao.getUserById(loggedUser.getUserid());
+            session.setAttribute("authenticatedUser", updatedUser);
+            
+            // Set success message
+            request.setAttribute("msg", "Successfully updated password.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(SUCCESS);
+            dispatcher.forward(request, response);
+        } else {
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
+            dispatcher.forward(request, response);
+        }
+        
     }
     
     private void editEmail(HttpServletRequest request, HttpServletResponse response)
@@ -303,6 +399,28 @@ public class UserController extends HttpServlet {
         }  
     }
     
+    private void editDesc(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(); // Retrieve current session.
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
+        String newDesc = request.getParameter("description");
+        
+        // Update the description in the database
+        if (dao.updateDesc(loggedUser, newDesc)) {
+            // Update session
+            User updatedUser = dao.getUserById(loggedUser.getUserid());
+            session.setAttribute("authenticatedUser", updatedUser);
+            
+            // Set success message
+            request.setAttribute("msg", "Successfully updated user's description.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(SUCCESS);
+            dispatcher.forward(request, response);
+        } else {
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
+            dispatcher.forward(request, response);
+        }
+    }
+    
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); //Retrieve current session.
@@ -314,6 +432,7 @@ public class UserController extends HttpServlet {
         request.setAttribute("msg", "Successfully deleted your account.");
         response.sendRedirect(response.encodeRedirectURL(INDEX));
     }
+    
     private void logout(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         HttpSession session = request.getSession(); //Retrieve current session.

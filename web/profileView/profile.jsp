@@ -35,12 +35,13 @@
                     </div>
                 </div>
                 <div class="profile-info">
+                    <h2>Profile Info</h2>
                     <form action="profile?action=editUsername" method="post">
                         <p>Username: <input type="text" name="username" value="<%= user.getUsername() %>" /></p>
                         <button class="edit-btn">Edit Username</button>
                     </form>
                     <form action="profile?action=editPassword" method="post">
-                        <p>Password: <input type="password" name="password" value="" /></p>
+                        <p>Password: <%= session.getAttribute("maskedPassword") %></p>
                         <button class="edit-btn">Change Password</button>
                     </form>
                     <form action="profile?action=editEmail" method="post">
@@ -61,7 +62,11 @@
                         <button class="edit-btn">Edit Gender</button>
                     </form>
                     <form action="profile?action=editDesc" method="post">
-                        <p>Description: <textarea name="description">${description}</textarea></p>
+                        <% if (user.getDescription() != null && user.getDescription().length() != 0) { %>
+                        <p>Description: <textarea name="description"><%= user.getDescription() %></textarea></p>
+                        <% } else { %>
+                        <p>Description: <textarea name="description" placeholder="Describe yourself."></textarea></p>
+                        <% } %>
                         <button class="edit-btn">Save Description</button>
                     </form>
                 </div>
