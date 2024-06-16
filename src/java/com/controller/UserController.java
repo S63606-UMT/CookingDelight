@@ -29,6 +29,7 @@ public class UserController extends HttpServlet {
     
     private static final String INDEX = "index.jsp";
     private static final String LOGIN = "login.jsp";
+    private static final String REGISTER = "register.jsp";
     private static final String PROFILE = "profileView/profile.jsp";
     private static final String SUCCESS = "profileView/success.jsp";
     private UserDao dao;
@@ -179,10 +180,20 @@ public class UserController extends HttpServlet {
         user.setEmail(request.getParameter("email"));
         user.setDateOfBirth(dob);
         user.setGender(request.getParameter("gender"));
-        dao.addUser(user);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN);
-        dispatcher.forward(request, response);
+        if (dao.addUser(user)) {
+            // Set success message
+            request.setAttribute("msg", "Successfully registered user. Login now.");
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN);
+            dispatcher.forward(request, response);
+        }   
+        else {
+            // Set success message
+            request.setAttribute("msg", "Failed registering user.");
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+        }
     }
     
     private void login(HttpServletRequest request, HttpServletResponse response)
@@ -195,7 +206,10 @@ public class UserController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
             dispatcher.forward(request, response);
         } else {
-            response.sendRedirect(response.encodeRedirectURL(LOGIN));
+            // Set success message
+            request.setAttribute("msg", "Invalid username or password.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(LOGIN);
+            dispatcher.forward(request, response);
         } 
         
     }

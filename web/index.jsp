@@ -16,6 +16,7 @@
     </head>
     <body>
         <jsp:include page="base/header.jsp" />
+        <%= request.getParameter("msg") %>
         <section class="hero">
             <h1>Welcome to Cooking Delight</h1>
             <p>Discover delicious recipes and cooking tips</p>
@@ -56,9 +57,9 @@
                 </div>
             </div>
         </section>
-        <% if (request.getParameter("msg") != null) { %>
-        <script >
-            alert("<%= (String) request.getParameter("msg") %>")
+        <% if (request.getAttribute("msg") != null) { %>
+        <script>
+            alert("<%= request.getAttribute("msg") %>");
         </script>
         <% } %>
         <jsp:include page="base/footer.jsp" />

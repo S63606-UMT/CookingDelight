@@ -12,10 +12,11 @@ package com.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 import com.model.User;
 import com.util.DBConnection;
 import java.time.LocalDate;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDao {
     
@@ -25,22 +26,26 @@ public class UserDao {
         connection = DBConnection.getConnection();
     }
     
-    public void addUser(User user) {
+    public boolean addUser(User user) {
+        boolean rowAdded = false;
         try {
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into users(username, password, email, dateOfBirth, gender) "
                             + "values (?, ?, ?, ?, ?)");
             
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setDate(4, java.sql.Date.valueOf(user.getDateOfBirth()));
             preparedStatement.setString(5, user.getGender());
-            preparedStatement.executeUpdate();
+            rowAdded = preparedStatement.executeUpdate() > 0; // If one row added, then rowAdded = true.
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        return rowAdded;
     }
     
     public void deleteUserById(int userId) {
@@ -65,7 +70,7 @@ public class UserDao {
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                if (password.equals(rs.getString("password"))) {
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
                     LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
                     
                     authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"), 

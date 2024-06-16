@@ -31,6 +31,12 @@
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
+        <% if (request.getAttribute("msg") != null) { %>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
+        
         <jsp:include page="base/footer.jsp" />
     </body>
 </html>
