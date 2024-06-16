@@ -25,8 +25,15 @@
             <div class="profile-container">
                 <div class="profile-picture">
                     <h2>Profile Picture</h2>
+                    <% if (user.getPicturePath() != null) { %>
+                    <img src="<%= user.getPicturePath() %>" alt="Profile Picture" class="profile-pic">
+                    <% } else { %>
                     <img src="img/default_pfp.png" alt="Profile Picture" class="profile-pic">
-                    <a href="editPFP.jsp"><button class="edit-image-btn">Edit Image</button></a>
+                    <% } %>
+                    <form action="profile?action=updatePicture" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file"/>
+                        <button class="edit-image-btn">Edit Image</button>
+                    </form>
                     <div class="profile-options">
                         <h2>User Options</h2>
                         <a href="profile?action=logout"><button class="user-btn">Logout</button></a>

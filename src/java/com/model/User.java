@@ -18,6 +18,7 @@ public class User {
     private LocalDate dateOfBirth;
     private String gender;
     private String description;
+    private String picturePath;
 
     public User() {
     }
@@ -94,6 +95,14 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPicturePath() {
+        return picturePath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
     }
     
 }

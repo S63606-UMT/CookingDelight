@@ -7,14 +7,17 @@ package com.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
+import java.io.File;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.dao.UserDao;
 import com.model.User;
@@ -25,6 +28,11 @@ import java.sql.SQLException;
  * @author Saiful
  */
 @WebServlet("/profile")
+@MultipartConfig(
+        fileSizeThreshold = 1024 *1024 * 1, // 1 MB
+        maxFileSize = 1024 *1024 * 10,      // 10 MB
+        maxRequestSize = 1024 *1024 * 100   // 100 MB
+)
 public class UserController extends HttpServlet {
     
     private static final String INDEX = "index.jsp";
@@ -162,6 +170,9 @@ public class UserController extends HttpServlet {
                     break;
                 case "updatePassword":
                     updatePassword(request, response);
+                    break;
+                case "updatePicture":
+                    updatePicture(request, response);
                     break;
                 default:
                     User user = (User) session.getAttribute("authenticatedUser");
@@ -420,6 +431,30 @@ public class UserController extends HttpServlet {
             dispatcher.forward(request, response);
         }
     }
+    private void updatePicture(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession(false); // Retrieve current session.
+        User loggedUser = (User) session.getAttribute("authenticatedUser");
+
+        String filePath = "C:\\img\\userProfiles\\" + loggedUser.getUserid() + ".png";
+        File file = new File(filePath);
+        File parentDir = file.getParentFile();
+        parentDir.mkdirs();
+        for (Part part : request.getParts()) {
+            part.write(filePath);
+        }
+        dao.updatePicturePath(loggedUser, filePath);
+        
+        // Update session
+        User updatedUser = dao.getUserById(loggedUser.getUserid());
+        session.setAttribute("authenticatedUser", updatedUser);
+        
+        // Set success message
+        request.setAttribute("msg", "Successfully updated profile picture.");
+        RequestDispatcher dispatcher = request.getRequestDispatcher(SUCCESS);
+        dispatcher.forward(request, response);
+    }
+    
     
     private void deleteUser(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {

@@ -77,8 +77,12 @@ public class UserDao {
                             rs.getString("email"), dateOfBirth, rs.getString("gender"));
                 
                     String description = rs.getString("description");
+                    String picturePath = rs.getString("picturePath");
                     if (description != null && description.length() != 0) {
                         authenticatedUser.setDescription(description);
+                    }
+                    if (picturePath != null && picturePath.length() != 0) {
+                        authenticatedUser.setPicturePath(picturePath);
                     }
                 }
             }     
@@ -185,6 +189,22 @@ public class UserDao {
         }
         return rowUpdated;
     }
+    
+    public boolean updatePicturePath(User user, String newPath) {
+        boolean rowUpdated = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set picturePath=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newPath);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
+    }
     /*
     public void updateUser(User user) {
         try {
@@ -237,8 +257,12 @@ public class UserDao {
                 user.setGender(rs.getString("gender"));
                 
                 String description = rs.getString("description");
+                String picturePath = rs.getString("picturePath");
                 if (description != null && description.length() != 0) {
                     user.setDescription(description);
+                }
+                if (picturePath != null && picturePath.length() != 0) {
+                    user.setPicturePath(picturePath);
                 }
             }
             
@@ -269,8 +293,12 @@ public class UserDao {
                         rs.getString("gender"));
                 
                 String description = rs.getString("description");
+                String picturePath = rs.getString("picturePath");
                 if (description != null && description.length() != 0) {
                     user.setDescription(description);
+                }
+                if (picturePath != null && picturePath.length() != 0) {
+                    user.setPicturePath(picturePath);
                 }
             }
         }
