@@ -68,8 +68,8 @@ public class UserDao {
                 if (password.equals(rs.getString("password"))) {
                     LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
                     
-                    authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"),
-                    rs.getString("email"), dateOfBirth, rs.getString("gender"));
+                    authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"), 
+                            rs.getString("email"), dateOfBirth, rs.getString("gender"));
                     
                 }
             }     
@@ -80,7 +80,8 @@ public class UserDao {
         return authenticatedUser;
     }
     
-    public void updateUsername(User user, String newUsername) {
+    public boolean updateUsername(User user, String newUsername) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set username=? "
@@ -88,13 +89,15 @@ public class UserDao {
 
             preparedStatement.setString(1, newUsername);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateEmail(User user, String newEmail) {
+    public boolean updateEmail(User user, String newEmail) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set email=? "
@@ -102,13 +105,15 @@ public class UserDao {
 
             preparedStatement.setString(1, newEmail);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateDob(User user, String newDob) {
+    public boolean updateDob(User user, String newDob) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set dateOfBirth=? "
@@ -116,13 +121,15 @@ public class UserDao {
 
             preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.parse(newDob)));
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateGender(User user, String newGender) {
+    public boolean updateGender(User user, String newGender) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set gender=? "
@@ -130,10 +137,11 @@ public class UserDao {
 
             preparedStatement.setString(1, newGender);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     /*
     public void updateUser(User user) {
@@ -195,19 +203,21 @@ public class UserDao {
     }
     
     public User getUserById(int userId) {
-        User user = new User();
+        User user = null;
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select * from users where username=?");
+                    .prepareStatement("select * from users where userid=?");
             preparedStatement.setInt(1, userId);
             ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                user.setUserid(rs.getInt("userid"));
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setEmail(rs.getString("email"));
-                user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
-                user.setGender(rs.getString("gender"));
+            if (rs.next()) {
+                LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
+
+                user = new User(rs.getInt("userid"), 
+                        rs.getString("username"), 
+                        rs.getString("password"), 
+                        rs.getString("email"), 
+                        dateOfBirth, 
+                        rs.getString("gender"));
             }
         }
         catch (SQLException e) {

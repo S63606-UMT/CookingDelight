@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="com.model.User, java.time.LocalDate" %>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,7 +14,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/style.css">
         <link rel="stylesheet" type="text/css" href="css/cssProfile/profile.css">
-        <script src="../js/jsProfile/profile.js"></script>
         <title>Profile - Cooking Delight</title>
     </head>
     <body>
@@ -35,25 +35,35 @@
                     </div>
                 </div>
                 <div class="profile-info">
-                    <h2>Profile Info</h2>
-                    <p>Username: <input type="text" id="username" value="<%= user.getUsername() %>" /></p>
-                    <a href="#" onclick="editUsername()"><button class="edit-btn">Edit Username</button></a>
-                    <p>Password: <b>********</b></p>
-                    <a href="../index.jsp"><button class="edit-btn">Change Password</button></a>
-                    <p>Email: <input type="email" id="email" value="<%= user.getEmail() %>" /></p>
-                    <a href="#" onclick="editEmail()"><button class="edit-btn">Edit Email</button></a>
-                    <p>Date of Birth: <input type="date" id="dob" value="<%= user.getDateOfBirth() %>" /></p>
-                    <a href="#" onclick="editDob()"><button class="edit-btn">Edit Date of Birth</button></a>
-                    <p>Gender: <select id="gender">
-                        <option value="<%= user.getGender() %>"><%= user.getGender() %></option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select></p>
-                    <a href="#" onclick="editGender()"><button class="edit-btn">Edit Gender</button></a>
-                    <%-- TODO: Add markdown support and utility --%>
-                    <p>Description: <textarea id="description">${description}</textarea></p> 
-                    <a href="#"><button class="edit-btn">Save Description</button></a>
+                    <form action="profile?action=editUsername" method="post">
+                        <p>Username: <input type="text" name="username" value="<%= user.getUsername() %>" /></p>
+                        <button class="edit-btn">Edit Username</button>
+                    </form>
+                    <form action="profile?action=editPassword" method="post">
+                        <p>Password: <input type="password" name="password" value="" /></p>
+                        <button class="edit-btn">Change Password</button>
+                    </form>
+                    <form action="profile?action=editEmail" method="post">
+                        <p>Email: <input type="email" name="email" value="<%= user.getEmail() %>" /></p>
+                        <button class="edit-btn">Edit Email</button>
+                    </form>
+                    <form action="profile?action=editDob" method="post">
+                        <p>Date of Birth: <input type="date" name="dob" value="<%= user.getDateOfBirth() %>" /></p>
+                        <button class="edit-btn">Edit Date of Birth</button>
+                    </form>
+                    <form action="profile?action=editGender" method="post">
+                        <p>Gender: <select name="gender">
+                            <option value="<%= user.getGender() %>"><%= user.getGender() %></option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select></p>
+                        <button class="edit-btn">Edit Gender</button>
+                    </form>
+                    <form action="profile?action=editDesc" method="post">
+                        <p>Description: <textarea name="description">${description}</textarea></p>
+                        <button class="edit-btn">Save Description</button>
+                    </form>
                 </div>
             </div>
         </div>

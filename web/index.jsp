@@ -56,6 +56,11 @@
                 </div>
             </div>
         </section>
+        <% if (request.getParameter("msg") != null) { %>
+        <script >
+            alert("<%= (String) request.getParameter("msg") %>")
+        </script>
+        <% } %>
         <jsp:include page="base/footer.jsp" />
     </body>
 </html>
