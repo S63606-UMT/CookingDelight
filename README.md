@@ -12,9 +12,9 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
         - profile image ✔
         - simple verification process (optional) 
 4. Fix bugs
-        - entering the wrong value in login.jsp seem to create a session anyway. FIXED ✔
-5. Implement conditions for changing password. (Just copy it from register function)
-6. Complete the profile image feature
+        - entering the wrong value in login.jsp seem to create a session anyway. FIXED ✔  
+5. Implement conditions for changing password. (Just copy it from register function)  
+6. Complete the profile image feature  
         - When a file is chosen, display underneath the existing profile image.
         - Redirect to profile view if empty.
 
