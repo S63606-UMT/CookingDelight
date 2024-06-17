@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import javax.servlet.ServletContext;
 
 import com.dao.UserDao;
 import com.model.User;
@@ -436,14 +437,20 @@ public class UserController extends HttpServlet {
         HttpSession session = request.getSession(false); // Retrieve current session.
         User loggedUser = (User) session.getAttribute("authenticatedUser");
 
-        String filePath = "C:\\img\\userProfiles\\" + loggedUser.getUserid() + ".png";
-        File file = new File(filePath);
-        File parentDir = file.getParentFile();
-        parentDir.mkdirs();
+        // Get Absolute Path to Project's Directory
+        ServletContext context = request.getServletContext();
+        String relativePath = "img/userProfiles/" + loggedUser.getUserid() + ".png";
+        String absolutePath = context.getRealPath(relativePath);
+        System.out.println("Absolute Path: " + absolutePath);
+        
+        // For logging purposses
+        //File parentDir = file.getParentFile();
+        //System.out.println("Parent Dir: " + parentDir);
+        
         for (Part part : request.getParts()) {
-            part.write(filePath);
+            part.write(absolutePath);
         }
-        dao.updatePicturePath(loggedUser, filePath);
+        dao.updatePicturePath(loggedUser, relativePath);
         
         // Update session
         User updatedUser = dao.getUserById(loggedUser.getUserid());

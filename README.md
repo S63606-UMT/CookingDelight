@@ -7,12 +7,16 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
 # ProfileView TODO: 
 1. Implement a wrapper to block direct access using URLs.
 2. Implement a more secure login.
-    - store the password's hash instead of plain text
+        - store the password's hash instead of plain text ✔
 3. Implement additional features.
-    - profile image
-    - simple verification process (optional)
+        - profile image ✔
+        - simple verification process (optional) 
 4. Fix bugs
-	- entering the wrong value in login.jsp seem to create a session anyway.
+        - entering the wrong value in login.jsp seem to create a session anyway. FIXED ✔
+5. Implement conditions for changing password. (Just copy it from register function)
+6. Complete the profile image feature
+        - When a file is chosen, display underneath the existing profile image.
+        - Redirect to profile view if empty.
 
 # RecipeView TODO: 
 1. Create recipe table under cooking_delight_db.sql
