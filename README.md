@@ -5,7 +5,7 @@ A website that offers knowledge on the delicacy around you, your people and your
 A web app developed for CSM3023 assignment. Designed according to the MVC Architecture, using mainly Java.
 
 # ProfileView TODO:  
-1. Implement a wrapper to block direct access using URLs.  
+1. Implement a wrapper to block direct access using URLs.  ✔  
 2. Implement a more secure login.  
 	- store the password's hash instead of plain text ✔
 3. Implement additional features.  
@@ -13,7 +13,7 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
 	- simple verification process (optional) ❌  
 4. Fix bugs  
 	- entering the wrong value in login.jsp seem to create a session anyway. FIXED ✔  
-5. Implement conditions for changing password. (Just copy it from register function)  
+5. Implement conditions for changing password. ✔  
 6. Complete the profile image feature  
 	- For profile image update, Redirect to profile view if empty. ✔  
 
