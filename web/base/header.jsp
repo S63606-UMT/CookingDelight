@@ -26,6 +26,9 @@
                     if (session.getAttribute("authenticatedUser") != null) {
                 %>
                 <li class="nav-item">
+                    <a class="nav-link" href="recipe?action=list">Recipe</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="profile?action=view">Profile</a>
                 </li>
                 <%} else { %>

@@ -19,7 +19,7 @@
         <section class="hero">
             <h1>Welcome to Cooking Delight</h1>
             <p>Discover delicious recipes and cooking tips</p>
-            <a href="recipe.html">Browse Recipes</a>
+            <a href="recipe?action=recipeSearch">Browse Recipes</a>
         </section>
         <section class="content">
             <h2>Featured Recipes</h2>
