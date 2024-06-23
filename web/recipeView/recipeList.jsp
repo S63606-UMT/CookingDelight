@@ -45,8 +45,8 @@
                         </td>
                         <td>
                             <a href="recipe?action=view&recipeid=<c:out value="${recipe.recipeid}" />"><button>View</button></a> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="recipe?action=edit"><button>Edit</button></a> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="recipe?action=delete"><button>Delete</button></a>
+                            <a href="recipe?action=edit&recipeid=<c:out value="${recipe.recipeid}" />"><button>Edit</button></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="recipe?action=delete&recipeid=<c:out value="${recipe.recipeid}" />"><button>Delete</button></a>
                             
                         </td>
                         </tr>
