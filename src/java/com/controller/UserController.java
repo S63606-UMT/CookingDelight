@@ -495,9 +495,23 @@ public class UserController extends HttpServlet {
         //File parentDir = file.getParentFile();
         //System.out.println("Parent Dir: " + parentDir);
         
+        boolean isPartEmpty = true;
+        
         for (Part part : request.getParts()) {
-            part.write(absolutePath);
+            if (part.getSize() > 0) {
+                part.write(absolutePath);
+                isPartEmpty = false;
+            }
         }
+
+        if (isPartEmpty) {
+            // Set error message
+            request.setAttribute("msg", "Error: No file selected. Please choose a file to upload.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE); // Define your error page
+            dispatcher.forward(request, response);
+            return;
+        }
+        
         dao.updatePicturePath(loggedUser, relativePath);
         
         // Update session
