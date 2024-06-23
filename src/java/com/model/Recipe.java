@@ -10,14 +10,14 @@ package com.model;
  */
 public class Recipe {
     private String title;
-    private String content;
+    private String shortDescription;
 
     public Recipe() {
     }
 
-    public Recipe(String title, String content) {
+    public Recipe(String title, String shortDescription) {
         this.title = title;
-        this.content = content;
+        this.shortDescription = shortDescription;
     }
 
     public String getTitle() {
@@ -28,13 +28,12 @@ public class Recipe {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
-    
     
 }
