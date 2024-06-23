@@ -1,7 +1,7 @@
 <%-- 
-    Document   : recipe
-    Created on : 11 Jun 2024, 9:07:48 am
-    Author     : Saiful
+    Document   : recipeSearch
+    Created on : 23 Jun 2024, 2:30:00 pm
+    Author     : saifu
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -11,11 +11,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/style.css">
-        <link rel="stylesheet" type="text/css" href="css/page/recipe.css">
+        <link rel="stylesheet" type="text/css" href="css/cssRecipe/recipeSearch.css">
         <title>Recipes - Cooking Delight</title>
+        <style>
+        </style>
     </head>
     <body>
-        <jsp:include page="base/header.jsp" />
+        <jsp:include page="../base/header.jsp" />
         <main>
             <section class="search-bar">
                 <input type="text" placeholder="Search for recipes...">
@@ -43,6 +45,11 @@
                 <!-- Add more recipe items here -->
             </section>
         </main>
-        <jsp:include page="base/footer.jsp" />
+        <% if (request.getAttribute("msg") != null) {%>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
+        <jsp:include page="../base/footer.jsp" />
     </body>
 </html>
