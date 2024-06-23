@@ -37,7 +37,7 @@
                     <img src="img/show_password_icon.png" class="toggle-password" 
                          onmousedown="showCPassword()" onmouseup="hideCPassword()" onmouseleave="hideCPassword()" alt="Show Password">
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Change Password</button>
             </form>
         </div>
         <% if (request.getAttribute("msg") != null && ((String) request.getAttribute("msg")).length() != 0) { %>
