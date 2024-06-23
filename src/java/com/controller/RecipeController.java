@@ -35,6 +35,7 @@ public class RecipeController extends HttpServlet {
     private static final String RECIPE_SEARCH = "recipeView/recipeSearch.jsp";
     private static final String RECIPE_LIST = "recipeView/recipeList.jsp";
     private static final String RECIPE_ADD = "recipeView/add.jsp";
+    private static final String RECIPE_VIEW = "recipeView/view.jsp";
     private RecipeDao dao;
     
     public RecipeController() throws ClassNotFoundException {
@@ -82,23 +83,37 @@ public class RecipeController extends HttpServlet {
         HttpSession session = request.getSession(false); //Retrieve session
         String action = request.getParameter("action");
         
-        User user = (User) session.getAttribute("authenticatedUser");
-        if (user == null) {
-            // Foward to index.jsp
-            RequestDispatcher dispatcher = request.getRequestDispatcher(INDEX);
-            dispatcher.forward(request, response);
-        }
-        
+        // For non-user
         try {
             switch (action) {
                 case "recipeSearch":
                     recipeSearch(request, response);
                     break;
+                case "view":
+                    viewRecipe(request, response);
+            }
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
+        }
+        
+        // For user
+        User user = (User) session.getAttribute("authenticatedUser");
+        if (user == null) {
+            // Foward to index.jsp
+            RequestDispatcher dispatcher = request.getRequestDispatcher(INDEX);
+            dispatcher.forward(request, response);
+        } 
+        
+        try {
+            switch (action) {
                 case "list":
                     recipeList(request, response);
                     break;
                 case "add":
                     addRecipe(request, response);
+                    break;
+                case "view":
+                    viewRecipe(request, response);
                 default:
                     RequestDispatcher dispatcher = request.getRequestDispatcher(INDEX);
                     dispatcher.forward(request, response);
@@ -147,12 +162,22 @@ public class RecipeController extends HttpServlet {
     
     private void recipeSearch(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
+        // Get all recipes.
+        List<Recipe> recipes = dao.getAllRecipes();
+        // Add the recipes.
+        request.setAttribute("RecipeList", recipes);
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_SEARCH);
         dispatcher.forward(request, response);
     }
     
     private void recipeList(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
+        // Get all recipes made by user.
+        List<Recipe> recipes = dao.getAllRecipes();
+        // Add the recipes.
+        request.setAttribute("RecipeList", recipes);
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_LIST);
         dispatcher.forward(request, response);
     }
@@ -162,18 +187,34 @@ public class RecipeController extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_ADD);
         dispatcher.forward(request, response);
     }
+    private void viewRecipe(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        // Get selected recipe's info
+        int recipeid = Integer.parseInt(request.getParameter("recipeid"));
+        Recipe recipe = dao.getRecipeById(recipeid);
+        request.setAttribute("selectedRecipe", recipe);
+        
+        RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
+        dispatcher.forward(request, response);
+    }
     
     private void insertRecipe(HttpServletRequest request, HttpServletResponse response)
     throws SQLException, IOException, ServletException {
         String title = request.getParameter("title");
         String shortDescription = request.getParameter("short-description");
+        String prepTime = request.getParameter("prep-time");
+        String cookTime = request.getParameter("cook-time");
+        String serving = request.getParameter("serving");
+        String ingredients = request.getParameter("ingredients");
+        String instructions = request.getParameter("instructions");
+        String chefNote = request.getParameter("chef-note");
         Recipe newRecipe = new Recipe(title, shortDescription);
         
         if (dao.addRecipe(newRecipe)) {
             // Get all recipes made by user.
-            List<Recipe> Recipes = dao.getAllRecipes(); 
-            // Add the recipes in session.
-            HttpSession session = request.getSession(false);
+            List<Recipe> recipes = dao.getAllRecipes(); 
+            // Add the recipes.
+            request.setAttribute("RecipeList", recipes);
             
             request.setAttribute("msg", "Successfully added recipe.");
             RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_LIST);

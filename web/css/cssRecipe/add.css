@@ -19,7 +19,7 @@ body{
     flex-grow: 1;
 }
 form {
-    max-width: 400px; /* adjust the width to your liking */
+    max-width: 35vw; /* adjust the width to your liking */
     margin: 40px auto; /* add some margin and center the form */
     padding: 20px; /* add some padding around the form */
     background-color: #f9f9f9; /* add a light gray background */
@@ -47,6 +47,25 @@ input[type="text"] {
     padding: 10px; /* add some padding to the input fields */
     border: 1px solid #ccc; /* add a light gray border */
     border-radius: 5px; /* add a subtle rounded corner */
+}
+div.small-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+div.small-input input[type="text"] {
+    width: 20%; /* make the input fields full-width */
+    height: 40px; /* adjust the height to your liking */
+    padding: 10px; /* add some padding to the input fields */
+    border: 1px solid #ccc; /* add a light gray border */
+    border-radius: 5px; /* add a subtle rounded corner */
+}
+textarea {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 0px;
+    border: 1px solid #ccc;
 }
 button[type="submit"] {
     width: 100%; /* make the submit button full-width */

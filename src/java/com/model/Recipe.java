@@ -9,6 +9,7 @@ package com.model;
  * @author saifu
  */
 public class Recipe {
+    private int recipeid;
     private String title;
     private String shortDescription;
 
@@ -16,6 +17,12 @@ public class Recipe {
     }
 
     public Recipe(String title, String shortDescription) {
+        this.title = title;
+        this.shortDescription = shortDescription;
+    }
+
+    public Recipe(int recipeid, String title, String shortDescription) {
+        this.recipeid = recipeid;
         this.title = title;
         this.shortDescription = shortDescription;
     }
@@ -35,5 +42,12 @@ public class Recipe {
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
     }
-    
+
+    public int getRecipeid() {
+        return recipeid;
+    }
+
+    public void setRecipeid(int recipeid) {
+        this.recipeid = recipeid;
+    }
 }

@@ -12,7 +12,7 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="recipe.jsp">Recipes</a>
+                    <a class="nav-link" href="recipe?action=recipeSearch">Recipes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.jsp">About</a>

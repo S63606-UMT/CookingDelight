@@ -4,6 +4,7 @@
     Author     : saifu
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="recipe" items="${listEmployee}">
+                    <c:forEach var="recipe" items="${RecipeList}">
                         <tr>
                             <td>
                         <c:out value="${recipe.title}" />
@@ -43,8 +44,10 @@
                         <c:out value="${recipe.shortDescription}" />
                         </td>
                         <td>
-                            <a href="recipe?action=edit />">Edit</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="recipe?action=delete />">Delete</a>
+                            <a href="recipe?action=view&recipeid=<c:out value="${recipe.recipeid}" />"><button>View</button></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="recipe?action=edit"><button>Edit</button></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="recipe?action=delete"><button>Delete</button></a>
+                            
                         </td>
                         </tr>
                     </c:forEach>
