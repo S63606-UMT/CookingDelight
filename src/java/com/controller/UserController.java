@@ -328,16 +328,64 @@ public class UserController extends HttpServlet {
         String newPassword = request.getParameter("new-password");
         String confirmPassword = request.getParameter("confirm-password");
         
-        if (dao.updatePassword(loggedUser, newPassword)) {
-            // Update session
-            User updatedUser = dao.getUserById(loggedUser.getUserid());
-            session.setAttribute("authenticatedUser", updatedUser);
-            
-            // Set success message
-            request.setAttribute("msg", "Successfully updated password.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher(SUCCESS);
+        if (!newPassword.equals(confirmPassword)) {
+            request.setAttribute("msg", "Error: Confirm password and new password do not match");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
             dispatcher.forward(request, response);
+            return;
+        }
+
+        // Check if password meets the conditions
+        if (newPassword.length() < 8) {
+            request.setAttribute("msg", "Error: Password should be at least 8 characters");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        boolean hasSpecialChar = false;
+        boolean hasUppercase = false;
+        boolean hasLowercase = false;
+        for (char c : newPassword.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                hasSpecialChar = true;
+            }
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            }
+            if (Character.isLowerCase(c)) {
+                hasLowercase = true;
+            }
+        }
+        if (!hasSpecialChar) {
+            request.setAttribute("msg", "Error: Password should have at least one special character");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        } else if (!(hasUppercase || hasLowercase)) {
+            request.setAttribute("msg", "Error: Password should have at least one uppercase or lowercase letter");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(REGISTER);
+            dispatcher.forward(request, response);
+            return;
+        }
+        
+        if (dao.isPassword(loggedUser, oldPassword)) { // Check if the old password matches with existing password.
+            if (dao.updatePassword(loggedUser, newPassword)) { //If true, direct to a success page.
+                // Update session
+                User updatedUser = dao.getUserById(loggedUser.getUserid());
+                session.setAttribute("authenticatedUser", updatedUser);
+
+                // Set success message
+                request.setAttribute("msg", "Successfully updated password.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher(SUCCESS);
+                dispatcher.forward(request, response);
+            } else {
+                request.setAttribute("msg", "Error: Failed to update password in the database.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
+                dispatcher.forward(request, response);
+            }
         } else {
+            request.setAttribute("msg", "Error: Invalid old password.");
             RequestDispatcher dispatcher = request.getRequestDispatcher(PROFILE);
             dispatcher.forward(request, response);
         }

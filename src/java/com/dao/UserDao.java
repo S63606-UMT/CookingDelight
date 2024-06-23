@@ -92,6 +92,25 @@ public class UserDao {
         }
         return authenticatedUser;
     }
+    public boolean isPassword(User user, String password) {
+        boolean isPassword = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select * from users where userid=?");
+            
+            preparedStatement.setInt(1, user.getUserid());
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
+                    isPassword = true;
+                }
+            }     
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isPassword;
+    }
     
     public boolean updateUsername(User user, String newUsername) {
         boolean rowUpdated = false;

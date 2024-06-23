@@ -79,6 +79,11 @@
                 </div>
             </div>
         </div>
+        <% if (request.getAttribute("msg") != null && ((String) request.getAttribute("msg")).length() != 0) { %>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
         <jsp:include page="../base/footer.jsp" />
     </body>
 </html>
