@@ -1,0 +1,73 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 23 Jun 2024, 3:56:48 pm
+    Author     : saifu
+*/
+/*
+    Main CSS: style.css
+    Target  : cssRecipe/add.jsp
+*/
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    flex-grow: 1;
+}
+form {
+    max-width: 400px; /* adjust the width to your liking */
+    margin: 40px auto; /* add some margin and center the form */
+    padding: 20px; /* add some padding around the form */
+    background-color: #f9f9f9; /* add a light gray background */
+    border: 1px solid #ddd; /* add a light gray border */
+    border-radius: 10px; /* add a subtle rounded corner */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* add a subtle shadow */
+}
+h1.display-3 {
+    text-align: center; /* center the h1 header */
+    margin-bottom: 20px; /* add some space between the h1 and form */
+    font-family: Montserrat, sans-serif;
+    font-weight: 600;
+}
+.form-group {
+    margin-bottom: 20px; /* add some space between form groups */
+    position: relative; /* Let eye icon based their position using this */
+}
+.label {
+    display: block; /* make the label a block element */
+    margin-bottom: 10px; /* add some space between the label and input */
+}
+input[type="text"] {
+    width: 95%; /* make the input fields full-width */
+    height: 40px; /* adjust the height to your liking */
+    padding: 10px; /* add some padding to the input fields */
+    border: 1px solid #ccc; /* add a light gray border */
+    border-radius: 5px; /* add a subtle rounded corner */
+}
+button[type="submit"] {
+    width: 100%; /* make the submit button full-width */
+    height: 40px; /* adjust the height to your liking */
+    background-color: #ff5722; /* add a orange background */
+    color: #fff; /* add white text color */
+    border: none; /* remove the border */
+    padding: 10px; /* add some padding to the button */
+    font-size: 16px; /* adjust the font size to your liking */
+    cursor: pointer; /* add a pointer cursor */
+    border-radius: 5px; /* add a subtle rounded corner */
+}
+button[type="submit"]:hover {
+    background-color: #333; /* add a darker blue background on hover */
+}
+.toggle-password {
+   width: 24px;          /* Keep width unchanged */
+   height: 24px;         /* Keep height unchanged */
+   position: absolute;
+   top: 60%;
+   right: 10px;
+   transform: translateY(-50%);
+   cursor: pointer;
+}
