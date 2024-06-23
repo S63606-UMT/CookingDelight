@@ -39,6 +39,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     border-radius: 50%;
     margin: 0 auto;
 }
+.profile-picture form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.profile-picture form input{
+    width: 90%;
+    align-self: flex-end;
+}
 .profile-info {
     width: 75%;
     padding-left: 20px;

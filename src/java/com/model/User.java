@@ -17,7 +17,30 @@ public class User {
     private String email;
     private LocalDate dateOfBirth;
     private String gender;
+    private String description;
+    private String picturePath;
 
+    public User() {
+    }
+    
+    
+    public User(String username, String password, String email, LocalDate dateOfBirth, String gender) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+
+    public User(int userid, String username, String password, String email, LocalDate dateOfBirth, String gender) {
+        this.userid = userid;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+    }
+    
     public int getUserid() {
         return userid;
     }
@@ -64,6 +87,22 @@ public class User {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPicturePath() {
+        return picturePath;
+    }
+
+    public void setPicturePath(String picturePath) {
+        this.picturePath = picturePath;
     }
     
 }

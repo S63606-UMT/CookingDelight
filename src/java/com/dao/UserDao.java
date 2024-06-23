@@ -12,10 +12,11 @@ package com.dao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 import com.model.User;
 import com.util.DBConnection;
 import java.time.LocalDate;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserDao {
     
@@ -25,30 +26,34 @@ public class UserDao {
         connection = DBConnection.getConnection();
     }
     
-    public void addUser(User user) {
+    public boolean addUser(User user) {
+        boolean rowAdded = false;
         try {
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
             PreparedStatement preparedStatement = connection
                     .prepareStatement("insert into users(username, password, email, dateOfBirth, gender) "
                             + "values (?, ?, ?, ?, ?)");
             
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(2, hashedPassword);
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setDate(4, java.sql.Date.valueOf(user.getDateOfBirth()));
             preparedStatement.setString(5, user.getGender());
-            preparedStatement.executeUpdate();
+            rowAdded = preparedStatement.executeUpdate() > 0; // If one row added, then rowAdded = true.
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
+        
+        return rowAdded;
     }
     
-    public void deleteUser(String username) {
+    public void deleteUserById(int userId) {
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("delete from users where username=?");
+                    .prepareStatement("delete from users where userid=?");
             
-            preparedStatement.setString(1, username);
+            preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
         }
         catch (SQLException e) {
@@ -56,27 +61,59 @@ public class UserDao {
         }
     }
     
-    public boolean isUser(String username, String password) {
+    public User isUser(String username, String password) {
+        User authenticatedUser = null;
         try {
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select from users where username=?");
+                    .prepareStatement("select * from users where username=?");
             
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                if (password.equals(rs.getString("password"))) {
-                    return true;
+            while (rs.next()) {
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
+                    LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
                     
+                    authenticatedUser = new User(rs.getInt("userid"), rs.getString("username"), rs.getString("password"), 
+                            rs.getString("email"), dateOfBirth, rs.getString("gender"));
+                
+                    String description = rs.getString("description");
+                    String picturePath = rs.getString("picturePath");
+                    if (description != null && description.length() != 0) {
+                        authenticatedUser.setDescription(description);
+                    }
+                    if (picturePath != null && picturePath.length() != 0) {
+                        authenticatedUser.setPicturePath(picturePath);
+                    }
                 }
             }     
         }
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return authenticatedUser;
+    }
+    public boolean isPassword(User user, String password) {
+        boolean isPassword = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select * from users where userid=?");
+            
+            preparedStatement.setInt(1, user.getUserid());
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                if (BCrypt.checkpw(password, rs.getString("password"))) {
+                    isPassword = true;
+                }
+            }     
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isPassword;
     }
     
-    public void updateUsername(User user, String newUsername) {
+    public boolean updateUsername(User user, String newUsername) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set username=? "
@@ -84,13 +121,32 @@ public class UserDao {
 
             preparedStatement.setString(1, newUsername);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateEmail(User user, String newEmail) {
+    public boolean updatePassword(User user, String newPassword) {
+        boolean rowUpdated = false;
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set password=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, hashedPassword);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
+    }
+    
+    public boolean updateEmail(User user, String newEmail) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set email=? "
@@ -98,13 +154,15 @@ public class UserDao {
 
             preparedStatement.setString(1, newEmail);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateDob(User user, String newDob) {
+    public boolean updateDob(User user, String newDob) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set dateOfBirth=? "
@@ -112,13 +170,15 @@ public class UserDao {
 
             preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.parse(newDob)));
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
     }
     
-    public void updateGender(User user, String newGender) {
+    public boolean updateGender(User user, String newGender) {
+        boolean rowUpdated = false;
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement("update users set gender=? "
@@ -126,10 +186,43 @@ public class UserDao {
 
             preparedStatement.setString(1, newGender);
             preparedStatement.setInt(2, user.getUserid());
-            preparedStatement.executeUpdate();
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return rowUpdated;
+    }
+    
+    public boolean updateDesc(User user, String newDesc) {
+        boolean rowUpdated = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set description=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newDesc);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
+    }
+    
+    public boolean updatePicturePath(User user, String newPath) {
+        boolean rowUpdated = false;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("update users set picturePath=? "
+                            + "where userid=?");
+
+            preparedStatement.setString(1, newPath);
+            preparedStatement.setInt(2, user.getUserid());
+            rowUpdated = preparedStatement.executeUpdate() > 0; // If one row updated, then rowUpdated = true.
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rowUpdated;
     }
     /*
     public void updateUser(User user) {
@@ -176,11 +269,56 @@ public class UserDao {
             preparedStatement.setString(1, username);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                user.setUserid(Integer.parseInt(rs.getString("userid")));
+                user.setUserid(rs.getInt("userid"));
                 user.setUsername(rs.getString("username"));
                 user.setEmail(rs.getString("email"));
                 user.setDateOfBirth(rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null);
                 user.setGender(rs.getString("gender"));
+                
+                String description = rs.getString("description");
+                String picturePath = rs.getString("picturePath");
+                if (description != null && description.length() != 0) {
+                    user.setDescription(description);
+                }
+                if (picturePath != null && picturePath.length() != 0) {
+                    user.setPicturePath(picturePath);
+                }
+            }
+            
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return user;
+    }
+    
+    public User getUserById(int userId) {
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select * from users where userid=?");
+            preparedStatement.setInt(1, userId);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                LocalDate dateOfBirth = rs.getDate("dateOfBirth") != null ? LocalDate.parse(rs.getDate("dateOfBirth").toString()) : null;
+
+                user = new User(rs.getInt("userid"), 
+                        rs.getString("username"), 
+                        rs.getString("password"), 
+                        rs.getString("email"), 
+                        dateOfBirth, 
+                        rs.getString("gender"));
+                
+                String description = rs.getString("description");
+                String picturePath = rs.getString("picturePath");
+                if (description != null && description.length() != 0) {
+                    user.setDescription(description);
+                }
+                if (picturePath != null && picturePath.length() != 0) {
+                    user.setPicturePath(picturePath);
+                }
             }
         }
         catch (SQLException e) {

@@ -19,7 +19,7 @@
         <div class="container">
             <!-- Login form content here -->
             <h1 class="display-3">Login</h1>
-            <form action="UserController?action=login" method="POST">
+            <form action="profile?action=login" method="POST">
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="username" class="form-control">
@@ -27,10 +27,18 @@
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" class="form-control">
+                    <img src="img/show_password_icon.png" class="toggle-password" 
+                         onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()" alt="Show Password">
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
             </form>
         </div>
+        <% if (request.getAttribute("msg") != null && ((String) request.getAttribute("msg")).length() != 0) { %>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
+        <script src="js/passwordToggle.js"></script>
         <jsp:include page="base/footer.jsp" />
     </body>
 </html>

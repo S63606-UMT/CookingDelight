@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .password-container {
+            position: relative;
+            width: max-content;
+        }
+        .password-container input {
+            padding-right: 30px; /* Space for the icon */
+            box-sizing: border-box; /* Ensure padding doesn't affect the input width */
+        }
+        .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="password-container">
+        <input type="password" id="password" placeholder="Enter your password">
+        <span class="toggle-password" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">👁️</span>
+    </div>
+
+    <script>
+        function showPassword() {
+            const passwordField = document.getElementById("password");
+            passwordField.setAttribute("type", "text");
+        }
+
+        function hidePassword() {
+            const passwordField = document.getElementById("password");
+            passwordField.setAttribute("type", "password");
+        }
+    </script>
+</body>
+</html>

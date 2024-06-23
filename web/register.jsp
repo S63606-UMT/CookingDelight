@@ -26,10 +26,14 @@
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" class="form-control" required>
+                    <img src="img/show_password_icon.png" class="toggle-password" 
+                         onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()" alt="Show Password">
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">Confirm Password:</label>
                     <input type="password" id="confirm-password" name="confirm-password" class="form-control" required>
+                    <img src="img/show_password_icon.png" class="toggle-password" 
+                         onmousedown="showCPassword()" onmouseup="hideCPassword()" onmouseleave="hideCPassword()" alt="Show Password">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -51,6 +55,12 @@
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
+        <% if (request.getAttribute("msg") != null && ((String) request.getAttribute("msg")).length() != 0) { %>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
+        <script src="js/passwordToggle.js"></script>
         <jsp:include page="base/footer.jsp" />
     </body>
 </html>

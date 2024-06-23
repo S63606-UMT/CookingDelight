@@ -5,7 +5,7 @@
 function editUsername() {
     var username = document.getElementById("username").value;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../UserController?action=editUsername", true);
+    xhr.open("POST", "profile?action=editUsername", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     xhr.onreadystatechange = function () {
@@ -28,7 +28,7 @@ function changePassword() {
 function editEmail() {
     var email = document.getElementById("email").value;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../UserController?action=editEmail", true);
+    xhr.open("POST", "profile?action=editEmail", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     xhr.onreadystatechange = function () {
@@ -47,7 +47,7 @@ function editEmail() {
 function editDob() {
     var dob = document.getElementById("dob").value;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../UserController?action=editDob", true);
+    xhr.open("POST", "profile?action=editDob", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     xhr.onreadystatechange = function () {
@@ -66,7 +66,7 @@ function editDob() {
 function editGender() {
     var gender = document.getElementById("gender").value;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "../UserController?action=editGender", true);
+    xhr.open("POST", "profile?action=editGender", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
     xhr.onreadystatechange = function () {

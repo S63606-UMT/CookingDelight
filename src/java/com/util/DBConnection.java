@@ -26,7 +26,7 @@ public class DBConnection {
             return myConnection;
         }
         else try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             myConnection = DriverManager.getConnection(myURL, "root", "admin");
         }
         catch (SQLException e) {
