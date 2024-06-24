@@ -53,12 +53,17 @@
             </section>
             <section class="newsletter">
                 <h2>Subscribe to Our Newsletter</h2>
-                <form>
-                    <input type="email" placeholder="Enter your email" required>
+                <form action="newsletter?action=subscribe" method="POST">
+                    <input type="email" name="email" id="email" placeholder="Enter your email" required>
                     <button type="submit">Subscribe</button>
                 </form>
             </section>
         </main>
+        <% if (request.getAttribute("msg") != null && ((String) request.getAttribute("msg")).length() != 0) {%>
+        <script>
+            alert("<%= request.getAttribute("msg")%>");
+        </script>
+        <% }%>
         <jsp:include page="base/footer.jsp" />
     </body>
 </html>

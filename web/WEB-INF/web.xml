@@ -8,6 +8,10 @@
         <servlet-name>RecipeController</servlet-name>
         <servlet-class>com.controller.RecipeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NewsletterController</servlet-name>
+        <servlet-class>com.controller.NewsletterController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/UserController</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>RecipeController</servlet-name>
         <url-pattern>/RecipeController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NewsletterController</servlet-name>
+        <url-pattern>/NewsletterController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

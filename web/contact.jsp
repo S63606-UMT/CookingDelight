@@ -19,7 +19,9 @@
         <main>
             <section class="contact-form">
                 <h2>Contact Us</h2>
-                <form>
+                <form action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="ff2a74c8-d916-4d9c-97de-0689802b652e">
+                    
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" required>
 
