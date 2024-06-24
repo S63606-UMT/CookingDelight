@@ -60,4 +60,4 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
 2. Yeah that's it.  
 
 ## Support TODO  
-1. Implement a form that is capable of sending email to the manager's address  
+1. Implement a form that is capable of sending email to the manager's address ✔  
