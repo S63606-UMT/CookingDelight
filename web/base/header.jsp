@@ -12,7 +12,7 @@
                     <a class="nav-link" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="recipe.jsp">Recipes</a>
+                    <a class="nav-link" href="recipe?action=recipeSearch">Recipes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.jsp">About</a>
@@ -25,6 +25,9 @@
                 <%
                     if (session.getAttribute("authenticatedUser") != null) {
                 %>
+                <li class="nav-item">
+                    <a class="nav-link" href="recipe?action=list">Recipe</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="profile?action=view">Profile</a>
                 </li>
