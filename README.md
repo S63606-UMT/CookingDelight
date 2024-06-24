@@ -56,7 +56,7 @@ A web app developed for CSM3023 assignment. Designed according to the MVC Archit
 4. The manager is able to do retrieve and delete operations for moderations purposes ❌
 
 ## Newsletter TODO  
-1. Store email.  
+1. Store email. ✔  
 2. Yeah that's it.  
 
 ## Support TODO  
