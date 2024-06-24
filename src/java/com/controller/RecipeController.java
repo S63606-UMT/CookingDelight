@@ -18,9 +18,11 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import javax.servlet.ServletContext;
 
+import com.dao.CommentDao;
 import com.dao.RecipeDao;
 import com.model.User;
 import com.model.Recipe;
+import com.model.Comment;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +40,12 @@ public class RecipeController extends HttpServlet {
     private static final String RECIPE_EDIT = "recipeView/edit.jsp";
     private static final String RECIPE_VIEW = "recipeView/view.jsp";
     private RecipeDao dao;
+    private CommentDao commentDao;
     
     public RecipeController() throws ClassNotFoundException {
         super();
         dao = new RecipeDao();
+        commentDao = new CommentDao();
     }
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -143,14 +147,25 @@ public class RecipeController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false); //Retrieve session
         String action = request.getParameter("action");
-
+        
+        // For non-user
+        try {
+            switch (action) {
+                case "comment":
+                    insertComment(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
+        }
+        
         User user = (User) session.getAttribute("authenticatedUser");
         if (user == null) {
             // Foward to index.jsp
             RequestDispatcher dispatcher = request.getRequestDispatcher(INDEX);
             dispatcher.forward(request, response);
         }
-
+        // For user
         try {
             switch (action) {
                 case "insert":
@@ -224,6 +239,9 @@ public class RecipeController extends HttpServlet {
         String[] instructions = recipe.getInstructions().split("\\r?\\n");
         request.setAttribute("instructions", instructions);
         
+        // Get all comments on this recipe
+        List<Comment> comments = commentDao.getAllCommentsByRecipeId(recipeid);
+        request.setAttribute("comments", comments);
         RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
         dispatcher.forward(request, response);
     }
@@ -311,6 +329,29 @@ public class RecipeController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_EDIT);
             dispatcher.forward(request, response);
         }
+    }
+    
+    private void insertComment(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        String username = request.getParameter("username");
+        String content = request.getParameter("comment-content");
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        int recipeid = Integer.parseInt(request.getParameter("recipeid"));
+        Comment comment = new Comment(username, content, rating, recipeid);
+        
+        List<Comment> comments = commentDao.getAllCommentsByRecipeId(recipeid);
+        request.setAttribute("comments", comments);
+        
+        if (commentDao.addComment(comment)) {
+            request.setAttribute("msg", "Successfully commented on this recipe.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
+            dispatcher.forward(request, response);
+        } else {
+            request.setAttribute("msg", "Error: Failed to comment.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
+            dispatcher.forward(request, response);
+        }
+        
     }
     /**
      * Returns a short description of the servlet.
