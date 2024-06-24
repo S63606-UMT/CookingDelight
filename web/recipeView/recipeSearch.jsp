@@ -25,24 +25,6 @@
                 <button>Search</button>
             </section>
             <section class="recipe-list">
-                <article class="recipe-item">
-                    <img src="recipe1.jpg" alt="Recipe 1">
-                    <h3>Spaghetti Carbonara</h3>
-                    <p>A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.</p>
-                    <a href="recipe1.html"><button>View Recipe</button></a>
-                </article>
-                <article class="recipe-item">
-                    <img src="recipe2.jpg" alt="Recipe 2">
-                    <h3>Chicken Alfredo</h3>
-                    <p>Creamy Alfredo sauce with tender chicken over fettuccine pasta.</p>
-                    <a href="recipe2.html"><button>View Recipe</button></a>
-                </article>
-                <article class="recipe-item">
-                    <img src="recipe3.jpg" alt="Recipe 3">
-                    <h3>Vegetable Stir-fry</h3>
-                    <p>A colorful mix of vegetables stir-fried in a savory sauce.</p>
-                    <a href="recipe3.html"><button>View Recipe</button></a>
-                </article>
                 <c:forEach var="recipe" items="${RecipeList}">
                     <article class="recipe-item">
                         <img src="recipe3.jpg" alt="Recipe 3">

@@ -338,15 +338,18 @@ public class RecipeController extends HttpServlet {
         int rating = Integer.parseInt(request.getParameter("rating"));
         int recipeid = Integer.parseInt(request.getParameter("recipeid"));
         Comment comment = new Comment(username, content, rating, recipeid);
-        
-        List<Comment> comments = commentDao.getAllCommentsByRecipeId(recipeid);
-        request.setAttribute("comments", comments);
-        
+
         if (commentDao.addComment(comment)) {
+            List<Comment> comments = commentDao.getAllCommentsByRecipeId(recipeid);
+            request.setAttribute("comments", comments);
+            
             request.setAttribute("msg", "Successfully commented on this recipe.");
             RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
             dispatcher.forward(request, response);
         } else {
+            List<Comment> comments = commentDao.getAllCommentsByRecipeId(recipeid);
+            request.setAttribute("comments", comments);
+            
             request.setAttribute("msg", "Error: Failed to comment.");
             RequestDispatcher dispatcher = request.getRequestDispatcher(RECIPE_VIEW);
             dispatcher.forward(request, response);
