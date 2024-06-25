@@ -46,7 +46,7 @@
                     <textarea name="ingredients" placeholder="Separate ingredients with a comma `,`."></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="instructions">Ingredients:</label>
+                    <label for="instructions">Instructions:</label>
                     <textarea name="instructions" placeholder="Separate instructions with a new line `Enter`."></textarea>
                 </div>
                 <div class="form-group">
