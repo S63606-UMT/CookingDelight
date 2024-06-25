@@ -1,0 +1,42 @@
+-- users Table
+CREATE TABLE `users` (
+    `userid` INT AUTO_INCREMENT PRIMARY KEY,
+    `username` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `dateOfBirth` DATE NOT NULL,
+    `gender` VARCHAR(10) NOT NULL,
+    `description` TEXT,
+    `picturePath` VARCHAR(255)
+);
+
+-- recipe Table
+CREATE TABLE `recipe` (
+    `recipeid` INT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `shortDescription` VARCHAR(255) NOT NULL,
+    `prepTime` INT NOT NULL,
+    `cookTime` INT NOT NULL,
+    `serving` INT NOT NULL,
+    `ingredients` TEXT NOT NULL,
+    `instructions` TEXT NOT NULL,
+    `chefNote` VARCHAR(255),
+    FOREIGN KEY (`userid`) REFERENCES `recipe`(`userid`)
+);
+
+-- comment Table
+CREATE TABLE `comment` (
+    `username` VARCHAR(50) NOT NULL,
+    `content` TEXT NOT NULL,
+    `rating` INT NOT NULL,
+    `recipeid` INT NOT NULL,
+    FOREIGN KEY (`recipeid`) REFERENCES `recipe`(`recipeid`)
+);
+
+-- newsletter Table
+CREATE TABLE `newsletter` (
+    `subscriptionid` INT AUTO_INCREMENT PRIMARY KEY,
+    `email` VARCHAR(100) NOT NULL,
+    `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
